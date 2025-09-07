@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Memory Management</title>
+
+		<link rel="stylesheet" href="/FoC/external/reveal.js/dist/reset.css">
+		<link rel="stylesheet" href="/FoC/external/reveal.js/dist/reveal.css">
+		<link rel="stylesheet" href="/FoC/external/reveal.js/dist/theme/white.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="/FoC/external/reveal.js/plugin/highlight/monokai.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section class="clean">
+					<h2>Memory Management</h2>
+					<img src="/FoC/img/programming.jpg" height="250px"/>
+					<h4>Fundamentals on Computing for Robotics, Graphics and Computer Vision</h4>
+					Darío Suárez - Adolfo Muñoz
+				</section>
+				<!--
+  <section data-markdown>
+    <textarea data-template>
+    ## Index
+    - How variables are stored in memory
+    - The Role of the Operating System
+    - Introduction to Virtual Memory
+    </textarea>
+  </section>
+  <section data-markdown>
+    <textarea data-template>
+    ## Goals
+    - Understand how memory stores variables
+    - Distinguish between data, heap, stack sections
+    
+    - Know the principles on a computer manages data in programs
+    </textarea>
+  </section>
+  <section>
+  <h2>Main Diagram</h2>
+  <img src="/FoC/img/elements_of_computing_system.jpg">
+  </section>
+-->
+
+  <section>
+  <h2> Memory Management</h2>
+    <ul>
+    <li>Memory stores <b>programs</b>; i.e., instructions and data</li>
+    <li>The Operating System and the C++ runtime manages memory</li>
+    </ul> 
+  </section>
+
+<!--
+  <section data-markdown>
+    <textarea data-template>
+    # The Role of the Operating System
+
+    </textarea>
+  </section>
+  
+<section data-markdown>
+    <textarea data-template>
+    # An Introduction to Virtual Memory
+
+    </textarea>
+  </section>
+  <section data-markdown>
+    <textarea data-template>
+    # Hardware Support
+
+    </textarea>
+  </section>
+
+  <section data-markdown>
+    <textarea data-template>
+    # Programmer's view
+
+    </textarea>
+  </section>
+  <section data-markdown>
+    <textarea data-template>
+    # Managed vs Unmanaged Memory
+
+    </textarea>
+  </section>
+-->
+  <section> 
+    <h2>Quiz: What is a variable? </h2>
+    <p class="fragment">A pair of a <b>name</b> with its semantics and a corresponding <b>location for storage</b>, normally memory</p>
+  </section>
+  <section> 
+    <h2>Quiz: What is a pointer? </h2>
+    <p class="fragment">A variable that stores a memory address</p>
+  </section>
+  <section> 
+    <h2>Quiz: Assuming a 64-bit address space, what are the sizes of all variables in the figure? </h2>
+    <img src="/FoC/img/memquiz.png" height="300">
+  </section>
+  <section>
+    <h2>Parts of a Program in Memory</h2>
+    <ul>
+    <li>According to  <a href="https://refspecs.linuxfoundation.org/elf/elf.pdf">ELF</a>, programs are divided into segments (memory), sections (linker)</li>
+    </ul> 
+    <img src="/FoC/img/memparts.png" height="300">
+  </section>
+  <section>
+    <h2>Text and Operating System parts</h2>
+    <ul>
+    <li><b>Operating System</b>: The operating system restricts some memory area for itself</li>
+    <li><b>Text</b>: Memory segment storing the code of our program; e.g., <q>main</q> function</li>
+    </ul> 
+  </section>
+  <section>
+    <h2>Data, Heap, and Stack and variable scopes</h2>
+    <ul>
+    <li><b>Data</b>: Area storing global variables with lifetime equal to the program</li>
+    <li><b>Heap</b>: Area storing variables dynamically allocated, unknown lifetime and not function limited</li>
+    <li><b>Stack</b>: Area storing variables created within the scope of a function</li>
+    </ul> 
+  </section>
+  <section>
+    <h2>Example of variables and their section mapping</h2>
+    <pre><code class="hljs cpp" data-trim data-line-numbers><script type="text/template">#include <iostream>
+
+int global_a = 1; // global scope, data section
+
+int next(int a) {
+  int local = a + 1; // local scope inside next, stack
+  int* local_ptr = new int; // what is the scope of this variable, heap
+  *local_ptr = local;
+  return *local_ptr;
+}
+
+int main() {
+  int a = global_a + 1; // local scope inside main, stack
+  a = next(a);
+  std::cout << a << std::endl;
+}
+</script></code></pre> 
+  </section>
+  <section>
+	  <h2>Heap and Stack example</h2>
+           <div class="r-stack"> 
+		   <img class="fragment fade-out" data-fragment-index="0" src="/FoC/img/stack_heap/stack_demo_1.png" height="300">
+                   <img class="fragment current-visible" data-fragment-index="0" src="/FoC/img/stack_heap/stack_demo_2.png" height="300">
+                   <img class="fragment" src="/FoC/img/stack_heap/stack_demo_3.png" height="300">
+                   <img class="fragment" src="/FoC/img/stack_heap/stack_demo_4.png" height="300">
+                   <img class="fragment" src="/FoC/img/stack_heap/stack_demo_5.png" height="300">
+                   <img class="fragment" src="/FoC/img/stack_heap/stack_demo_6.png" height="300">
+                   <img class="fragment" src="/FoC/img/stack_heap/stack_demo_7.png" height="300">
+                   <img class="fragment" src="/FoC/img/stack_heap/stack_demo_8.png" height="300">
+	   </div>
+           <img src="/FoC/img/stack_heap/demo_legend.png" height="50">
+	   <em style="font-size:25%">source: https://courses.grainger.illinois.edu/cs225/fa2022/resources/stack-heap/</em>
+  </section>
+ <section>
+   <h2>Quiz: Pointers' storage</h2>
+   <p class="fragment">Can the heap, stack and data sections store pointers?</p>
+ </section>
+ <section>
+ <h2>Quiz: What is the output of this code?</h2>
+ <pre><code class="hljs cpp" data-trim data-line-numbers><script type="text/template">#include <iostream>
+
+void swap(int a, int b) {
+  int x = a;
+  a = b;
+  b = x;
+}
+
+int main()
+{
+  int a = 1, b = 2;
+  swap(a, b);
+  std::cout << "a: " << a << ", b: " << b << std::endl;
+}
+</script></code></pre> 
+ </section>
+ <section>
+ <h2>C++ parameters default pass</h2>
+ <p>In C++, <em>pass-by-copy</em> is the default policy
+  </section>
+ <section>
+ <h2>Quiz: What is the output of this code?</h2>
+ <h3>Pointers to the rescue</h3>
+ <pre><code class="hljs cpp" data-trim data-line-numbers><script type="text/template">#include <iostream>
+
+void swap(int *a, int *b) {
+  int x = *a;
+  *a = *b;
+  *b = x;
+}
+
+int main()
+{
+  int a = 1, b = 2;
+  swap(&a, &b);
+  std::cout << "a: " << a << ", b: " << b << std::endl;
+}
+</script></code></pre> 
+  </section>
+ 
+ <section>
+ <h2>Pointers can be dangerous</h2>
+ <pre><code class="hljs cpp" data-trim data-line-numbers><script type="text/template" class="stretch">#include <iostream>
+
+void swap(int *a, int *b) {
+  int x = *a;
+  *a = *b;
+  *b = x;
+}
+
+int main() {
+  int a = 1;
+  int *b = nullptr;
+  swap(&a, b);
+  std::cout << "a: " << a << ", b: " << b << std::endl;
+}
+</script></code></pre> 
+  </section>
+  <section>
+  <h2>nullptr, the pointer literal</h2>
+  <ul>
+	  <li><code>nullptr</code> represents the null pointer constant</li>
+	  <li>Its type is <code>std::nullptr_t</code> can be converted to any pointer type</li>
+	  <li>Never use <code>NULL</code> or <code>0</code> for pointers
+  </ul>
+  </section>
+
+  <section>
+	  <h2>NULL bad use example</h2>
+	  <pre><code class="hljs cpp" data-trim data-line-numbers><script type="text/template">// assuming this type signature
+func(std::pair<const char *, double>)
+
+// compilation error
+func(std::make_pair(NULL, 3.14))
+// NULL expands to 0
+func(std::make_pair(0, 3.14))
+// With signature
+func(std::pair<int, double>)
+
+// correctly compiles
+func(std::make_pair(nullptr, 3.14))
+// With signature
+func(std::pair<const char *, double>)
+</script></code></pre> 
+	   <em style="font-size:25%">source: https://learn.microsoft.com/es-es/cpp/cpp/nullptr?view=msvc-170</em>
+  </section>
+  
+  <section>
+  <h2>References</h2>
+     <ul>
+	     <li>An alias to an <b>already-existing</b> object or function</li>
+	     <li>Access to references are the same to the object they point to</li>
+     </ul>
+  </section>
+
+   <section>
+     <h2>Reference example</h2>
+     <pre><code class="hljs cpp" data-trim data-line-numbers><script type="text/template">#include <iostream>
+void successor(int& j) { j = j + 1; }
+
+int main() {
+  int i = 0;
+  int& i_ref = i; // reference creation
+		  
+  i_ref = i_ref + 1;
+  std::cout << i << std::endl;
+
+  i = 5;
+  std::cout << i << std::endl;
+
+  succesor(i_ref);
+  std::cout << i << std::endl;
+}
+
+</script></code></pre> 
+  </section>
+
+  <section>
+  <h2>Pointers and Arrays</h2>
+    <h4>Arrays</h4>
+     <ul>
+     <li>Definition: contiguously allocated nonempty sequence of objects with a particular element type. Size
+cannot change</li>
+     <li>Example: <code>int array[3]={0, 1, 2};</code></li>
+     <li><em>Normally</em>, they will be allocated in the stack</li>
+     <li>Please prefer <code>std::array</code> container over arrays</li>
+     </ul>
+  </section>
+  <section>
+  <h2>Dynamic Memory Allocation</pre></h2>
+     <ul>
+      <li>Dynamic memory is stored in the heap section. Enlarges and reduces at run time</li>
+      <li>Allocation:
+       <pre><code>int * ptr_int = new int;</code></pre>
+       <pre><code>int * array_int = new int[4];</code></pre></li>
+      <li>Deallocation:
+       <pre><code>delete ptr_int;</code></pre>
+       <pre><code>delete [] array_int;</code></pre></li>
+      </ul>
+      <li>Manually managing dynamic memory is error-prone. Please 
+be very disciplined</li>
+  </section>
+
+  <section>
+  <h2>Pointer Arithmetic</h2>
+   <ul>
+   <li>C++ allows arithmetic operations on pointers</li>
+    <li><code>a[i] == *(a + i * sizeof(a[0]))</code></li>
+   </ul>
+  </section>
+  <section>
+  <h2>Quiz: what is the final value of these pointers</h2>
+   <ul>
+   <em>Please assume all pointers point to address 16</em>
+   <pre><code>uint8_t *ptr; ptr+=2;</code></pre>
+   <pre><code>int *ptr; ptr=nullptr;</code></pre>
+   <pre><code>int *ptr; ptr+=3;</code></pre>
+   </ul>
+  </section>
+
+			</div>
+		</div>
+
+		<script src="/FoC/external/reveal.js/dist/reveal.js"></script>
+		<script src="/FoC/external/reveal.js/plugin/notes/notes.js"></script>
+		<script src="/FoC/external/reveal.js/plugin/markdown/markdown.js"></script>
+		<script src="/FoC/external/reveal.js/plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+				slideNumber: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+				,dependencies: [
+				{ src: '../external/reveal.js-plugin-externalcode/externalcode.js', condition: function() { return !!document.querySelector( '[data-code]' ); } }]		});
+		</script>
+		<style type="text/css">
+			/* 1. Style header/footer <div> so they are positioned as desired. */
+			.header-left {
+				position: absolute;
+				top: 1%;
+				left: 1%;
+				font-size: 0.4em;
+				text-align: left;
+				max-width: 45%;
+			}
+			.header-right {
+				position: absolute;
+				top: 1%;
+				right: 1%;
+				font-size: 0.4em;
+				text-align: right;
+				max-width: 45%;
+			}
+			.footer-left {
+				position: absolute;
+				bottom: 1%;
+				left: 1%;
+				font-size: 0.4em;
+				transform: none;
+			}
+			@media screen and (max-width: 600px) {
+  			.footer-left {
+    			left: 50%;
+  				transform: translate(-50%, 0);
+  			}
+}
+		</style>
+
+		<!-- 2. Create hidden header/footer <div> -->
+		<div id="hidden" style="display:none;">
+			<div id="header">
+				<div class="header-left">Memory Management</div>
+				<div class="header-right">Fundamentals on Computing for Robotics, Graphics and Computer Vision</div>
+				<div class="footer-left"><img height="60px" width="auto" src="/FoC/img/unizar-logo.png"/></div>
+			</div>
+		</div>
+
+		<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+		<script type="text/javascript">
+			// 3. On Reveal.js ready event, copy header/footer <div> into each `.slide-background` <div>
+			var header = $('#header').html();
+			if ( window.location.search.match( /print-pdf/gi ) ) {
+				Reveal.addEventListener( 'ready', function( event ) {
+					$('.slide-background:not(.clean)').append(header);
+				});
+			}
+			else {
+				$('.slide-background:not(.clean)').append(header);
+		   }
+		</script>
+
+	</body>
+</html>
